@@ -67,8 +67,11 @@ function DeskInner({ prospect, agentId, onTranscript, onComplete, onUseSimulatio
     onDisconnect: () => finalize(),
     onError: (e) => setError(typeof e === "string" ? e : e?.message || "Connection error"),
     onMessage: (payload) => {
-      const text = payload?.message;
+      const raw = payload?.message;
       const source = payload?.source || payload?.role;
+      if (!raw) return;
+      // Strip leaked audio/emotion tags like [happy], [laughs], [whispers].
+      const text = raw.replace(/\[[a-zA-Z][a-zA-Z\s]*\]/g, "").replace(/\s{2,}/g, " ").trim();
       if (!text) return;
       const turn = { speaker: speakerFor(source), text, source };
       messagesRef.current = [...messagesRef.current, turn];

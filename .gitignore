@@ -8,3 +8,6 @@ out/
 
 # Runtime database (regenerated from seed on first run)
 data/db.json
+
+# Exported deck (large binary)
+Handshake-AI-deck.pptx
